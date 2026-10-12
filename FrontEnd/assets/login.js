@@ -25,3 +25,4 @@ form.addEventListener("submit", async function (event) {
         alert("Erreur dans l’identifiant ou le mot de passe");
     }
 });
+

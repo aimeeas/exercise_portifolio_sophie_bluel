@@ -1,3 +1,21 @@
+const modeEdition = document.querySelector(".mode-edition");
+const token = localStorage.getItem("token");
+const navLogin = document.querySelector("#nav-login");
+const navLogout = document.querySelector("#nav-logout");
+
+if (token) {
+    modeEdition.classList.add("visible");
+    navLogout.classList.add("visible");
+    navLogin.classList.add("hidden");
+}
+
+navLogout.addEventListener("click", function (event) {
+    event.preventDefault();
+    localStorage.removeItem("token");
+    window.location.reload();
+});
+
+
 // Récupération des pièces depuis l'API
 const reponse = await fetch("http://localhost:5678/api/works");
 const works = await reponse.json();

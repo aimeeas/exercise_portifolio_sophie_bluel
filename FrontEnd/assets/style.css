@@ -30,6 +30,8 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFEF8;
+;
 }
 ol, ul {
 	list-style: none;
@@ -58,6 +60,14 @@ header {
 	justify-content: space-between;
 	margin: 50px 0
 }
+
+footer nav {
+	height: 56px;
+	background-color: white;
+	width: 100vw;
+	margin-left: calc(50% - 50vw);
+}
+
 section {
 	margin: 50px 0
 }
@@ -234,5 +244,32 @@ footer nav ul {
 #filtres button.active {
 	background-color: #1D6154;
 	color: white;
+}
+
+.mode-edition {
+	display: none;
+	background-color: black;
+	color: white;
+	height: 56px;
+	text-align: center;
+	align-content: center;
+	width: 100vw;
+	margin-left: calc(50% - 50vw);
+}
+
+.mode-edition.visible {
+	display: block;
+}
+
+#nav-logout {
+	display: none;
+}
+
+#nav-logout.visible {
+	display: list-item;
+}
+
+#nav-login.hidden {
+	display: none;
 }
 
