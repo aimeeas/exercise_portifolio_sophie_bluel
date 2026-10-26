@@ -199,7 +199,7 @@ li:hover {
 	display: block;
 }
 
-input[type="submit"]{
+input[type="submit"] {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
@@ -227,6 +227,10 @@ footer nav ul {
 	margin-bottom: 50px;
 }
 
+#filtres.hidden {
+	display: none;
+}
+
 #filtres button {
 	font-family: 'Syne';
 	font-weight: 700;
@@ -247,7 +251,6 @@ footer nav ul {
 }
 
 .mode-edition {
-	display: none;
 	background-color: black;
 	color: white;
 	height: 56px;
@@ -257,19 +260,122 @@ footer nav ul {
 	margin-left: calc(50% - 50vw);
 }
 
-.mode-edition.visible {
+#btn-modifier {
+	font-family: 'Work Sans';
+	font-size: 14px;
+	font-weight: normal;
+	color: black;
+	text-decoration: none;
+	margin-left: 30px;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: none;
+	z-index: 10;
+}
+
+.modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 630px;
+	height: 688px;
+	background-color: white;
+	box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+	border-radius: 10px;
+	padding: 20px;
+	display: none;
+	z-index: 11;
+}
+
+.overlay.open,
+.modal.open {
 	display: block;
 }
 
-#nav-logout {
-	display: none;
+.modal_close {
+	position: absolute;
+	top: 16px;
+	right: 16px;
+	cursor: pointer;
+	padding-bottom: 25px;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
-#nav-logout.visible {
-	display: list-item;
+.modal_close svg {
+	height: 24px;
+	width: 24px;
 }
 
-#nav-login.hidden {
-	display: none;
+.modal_titre {
+	font-size: 26px;
+	text-align: center;
+	padding: 30px;
 }
 
+.ajouter_photo {
+	font-family: 'Syne';
+	font-weight: 700;
+	align-items: center;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px;
+	padding: 13px;
+	cursor: pointer;
+}
+
+.modal_body {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 10px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+.modal_body figure {
+	position: relative;
+	margin: 0;
+}
+
+.modal_line {
+	grid-column: 1 / -1;   
+	border: none;
+	border-top: 1px solid #B3B3B3;
+	margin: 35px 0 0;
+}
+
+.delete_btn {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	width: 17px;
+	height: 17px;
+	padding: 0;
+	border: none;
+	border-radius: 2px;
+	background-color: black;
+	color: white;
+	font-size: 9px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.image_modal {
+	width: 100%;
+	height: auto;
+	display: block;
+}
