@@ -1,3 +1,5 @@
+import { createModal, galleryModal, resetPreview, initFormAjout, initSuppression } from "./modal.js";
+
 const token = localStorage.getItem("token");
 
 if (token) {
@@ -128,119 +130,91 @@ function createFilters(categories) {
 createFilters(categories);
 
 
-// Création du Modal
+// ===== Modal =====
 
-function createModal() {
+// 1. Création du modal (doit être fait AVANT tout le reste)
+createModal(categories);
 
-    // Overlay (fond sombre)
-	const overlay = document.createElement("div");
-	overlay.classList.add("overlay");
-	document.body.appendChild(overlay);
-
-	// Conteneur principal
-	const modal = document.createElement("div");
-	modal.classList.add("modal");
-
-	// Header
-	const modalHeader = document.createElement("div");
-	modalHeader.classList.add("modal_header");
-
-	const modalClose = document.createElement("div");
-	modalClose.classList.add("modal_close");
-	modalClose.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-
-	const modalTitre = document.createElement("div");
-	modalTitre.classList.add("modal_titre");
-	modalTitre.textContent = "Galerie Photo";
-
-	modalHeader.appendChild(modalClose);
-	modalHeader.appendChild(modalTitre);
-
-	// Body (les photos seront ajoutées par galleryModal)
-	const modalBody = document.createElement("div");
-	modalBody.classList.add("modal_body");
-
-	// Footer
-	const modalFooter = document.createElement("div");
-	modalFooter.classList.add("modal_footer");
-
-	const ajouterPhoto = document.createElement("div");
-	ajouterPhoto.classList.add("ajouter_photo");
-	ajouterPhoto.textContent = "Ajouter une photo";
-
-	modalFooter.appendChild(ajouterPhoto);
-
-	// Assemblage
-	modal.appendChild(modalHeader);
-	modal.appendChild(modalBody);
-	modal.appendChild(modalFooter);
-
-	document.body.appendChild(modal);
-}
-
-createModal();
-
-// Ouverture / fermeture du modal
+// 2. Éléments du modal
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
+const modalBody = document.querySelector(".modal_body");
+const vueGalerie = document.querySelector(".vue_galerie");
+const vueAjout = document.querySelector(".vue_ajout");
+
+// 3. Galerie du modal
+galleryModal(modalBody, works);
+
+
+// Navigation entre les deux vues
+
+function showVueGalerie() {
+    vueGalerie.classList.remove("hidden");
+    vueAjout.classList.add("hidden");
+}
+
+function showVueAjout() {
+    vueGalerie.classList.add("hidden");
+    vueAjout.classList.remove("hidden");
+}
+
+document.querySelector(".ajouter_photo").addEventListener("click", showVueAjout);
+document.querySelector(".modal_retour").addEventListener("click", showVueGalerie);
+
+
+// Ouverture / fermeture du modal
 
 function openModal() {
-	modal.classList.add("open");
-	overlay.classList.add("open");
+    modal.classList.add("open");
+    overlay.classList.add("open");
 }
 
 function closeModal() {
-	modal.classList.remove("open");
-	overlay.classList.remove("open");
+    modal.classList.remove("open");
+    overlay.classList.remove("open");
+    showVueGalerie(); // à la réouverture, on revient toujours sur la galerie
+    resetPreview();   // et la zone d'upload est vide
 }
 
 // Ouvrir avec "modifier"
 const btnModifier = document.getElementById("btn-modifier");
 if (btnModifier) {
-	btnModifier.addEventListener("click", function (event) {
-		event.preventDefault(); // évite que le "#" remonte la page
-		openModal();
-	});
+    btnModifier.addEventListener("click", function (event) {
+        event.preventDefault(); // évite que le "#" remonte la page
+        openModal();
+    });
 }
 
-// Fermer avec la croix ou en cliquant sur le fond
+// Fermer avec la croix, en cliquant sur le fond ou avec Échap
 document.querySelector(".modal_close").addEventListener("click", closeModal);
-overlay.addEventListener("click", closeModal)
+overlay.addEventListener("click", closeModal);
 
-// Galerie du Modal
-
-const modalBody = document.querySelector(".modal_body");
-
-function galleryModal(works) {
-    modalBody.innerHTML = ""; 
-    for (let i = 0; i < works.length; i++) {
-
-        const work = works[i];
-
-        // Création d'une balise dédiée à chaque work
-        const figure = document.createElement("figure");
-        figure.classList.add("image_modal_" + work.id);
-        modalBody.appendChild(figure);
-
-        // Image
-        const image = document.createElement("img");
-        image.src = work.imageUrl;
-        image.classList.add("image_modal");
-        figure.appendChild(image);
-
-        // Delete Image
-        const deleteBtn = document.createElement("button");
-        deleteBtn.classList.add("delete_btn");
-        deleteBtn.dataset.id = work.id; // guarda o id para apagar depois
-        deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-        figure.appendChild(deleteBtn);
-
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeModal();
     }
-    
-    // Ligne de la gallery
-    const line = document.createElement("hr");
-    line.classList.add("modal_line");
-    modalBody.appendChild(line);
-}
+});
 
-galleryModal(works);
+
+// Ajout d'une photo
+
+initFormAjout(function (nouveauWork) {
+    works.push(nouveauWork);           // ajoute la photo à la liste
+    createGallery(works);              // met à jour la galerie de la page
+    galleryModal(modalBody, works);    // met à jour la galerie du modal
+    // le modal reste ouvert sur le formulaire, déjà vidé par initFormAjout
+});
+
+
+// Suppression d'une photo
+
+initSuppression(modalBody, function (id) {
+    // Retire le work de la liste
+    const index = works.findIndex(function (work) {
+        return work.id === id;
+    });
+    works.splice(index, 1);
+
+    createGallery(works);              // met à jour la galerie de la page
+    galleryModal(modalBody, works);    // met à jour la galerie du modal
+});
