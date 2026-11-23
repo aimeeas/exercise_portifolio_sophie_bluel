@@ -96,15 +96,26 @@ const categories = await reponseCat.json();
 // Récupération du conteneur des filtres
 const filtres = document.querySelector("#filtres");
 
+// Met le bouton cliqué en vert et enlève le vert des autres
+function setFiltreActif(boutonClique) {
+    const boutons = filtres.querySelectorAll("button");
+    for (let i = 0; i < boutons.length; i++) {
+        boutons[i].classList.remove("active");
+    }
+    boutonClique.classList.add("active");
+}
+
 // Création des filtres
 function createFilters(categories) {
 
     // Bouton "Tous" créé à part, car il ne vient pas de l'API
     const btnTous = document.createElement("button");
     btnTous.textContent = "Tous";
+    btnTous.classList.add("active"); // "Tous" est en vert dès l'arrivée sur le site
     filtres.appendChild(btnTous);
 
     btnTous.addEventListener("click", function () {
+        setFiltreActif(btnTous);
         createGallery(works);
     });
 
@@ -119,6 +130,7 @@ function createFilters(categories) {
         filtres.appendChild(button);
 
         button.addEventListener("click", function () {
+            setFiltreActif(button);
             const resultat = works.filter(function (work) {
                 return work.categoryId === categorie.id;
             });
